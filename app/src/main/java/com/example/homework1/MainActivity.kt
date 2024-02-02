@@ -6,15 +6,17 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import org.w3c.dom.Text
 import java.util.Random
 
 class MainActivity : AppCompatActivity() {
+    //for range of operands
     private val lowerBound = 10;
-    private val upperBound = 100;
+    private val upperBound = 100
+    //track score
     private var score = 0;
     private var questionsAsked = 0;
-    private var message = ""
+
+    private var feedback = ""
     private var correctStreak = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +45,7 @@ class MainActivity : AppCompatActivity() {
             view.id == R.id.btnMult && (op1 * op2 == answer)) {
             score++;
             correctStreak++
-            message = "Correct!"
+            feedback = "Correct!"
             findViewById<TextView>(R.id.feedback).setTextColor(Color.parseColor("#00FF00"));
 
         } else {
@@ -54,10 +56,11 @@ class MainActivity : AppCompatActivity() {
 
 
         }
-        findViewById<TextView>(R.id.feedback).text = "$message"
-        println(message)
+        findViewById<TextView>(R.id.feedback).text = "$feedback"
+        println(feedback)
         if (correctStreak == 3) {
-            Toast.makeText(this, "Streak = 3", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Sheesh, you kinda smart.", Toast.LENGTH_SHORT).show()
+            correctStreak =0
         }
         questionsAsked++;
         findViewById<TextView>(R.id.score).text = "Score: $score/$questionsAsked"
@@ -75,16 +78,17 @@ class MainActivity : AppCompatActivity() {
         when(operation) {
             1 -> {
                 findViewById<TextView>(R.id.answer).text = "${op1 + op2}"
-                message = "Wrong: $op1 + $op2 = ${op1+op2}"
+                feedback = "Wrong: $op1 + $op2 = ${op1+op2}"
             }
             2 -> {
                 findViewById<TextView>(R.id.answer).text = "${op1 - op2}"
-                message = "Wrong: $op1 - $op2 = ${op1-op2}"
+                feedback = "Wrong: $op1 - $op2 = ${op1-op2}"
             }
             3 -> {
                 findViewById<TextView>(R.id.answer).text = "${op1 * op2}"
-                message = "Wrong: $op1 * $op2 = ${op1*op2}"
+                feedback = "Wrong: $op1 * $op2 = ${op1*op2}"
             }
+            
         }
 
     }
