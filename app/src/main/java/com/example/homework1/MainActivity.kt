@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.operand1).text = "$op1"
         findViewById<TextView>(R.id.operand2).text = "$op2"
-        var operation = getRandomNumber(1,3);
+        var operation = getRandomNumber(1,4);
         when(operation) {
             1 -> {
                 findViewById<TextView>(R.id.answer).text = "${op1 + op2}"
@@ -88,7 +88,12 @@ class MainActivity : AppCompatActivity() {
                 findViewById<TextView>(R.id.answer).text = "${op1 * op2}"
                 feedback = "Wrong: $op1 * $op2 = ${op1*op2}"
             }
-            
+            4 -> {
+                op2 = pickDivisor(op1);
+                findViewById<TextView>(R.id.answer).text = "${op1 / op2}"
+                feedback = "Wrong: $op1 / $op2 = ${op1/op2}"
+            }
+
         }
 
     }
@@ -96,5 +101,17 @@ class MainActivity : AppCompatActivity() {
     //return a random number with range [min, max]
     private fun getRandomNumber(min: Int, max: Int): Int {
         return Random().nextInt(max-min+1) + min;
+    }
+    //need method to get all possible divisors of op1
+    private fun pickDivisor(x: Int): Int {
+        val divisors = emptyArray<Int>(); //https://stackoverflow.com/questions/29743160/how-to-create-an-empty-array-in-kotlin
+        for(i in 1..x){ //https://kotlinlang.org/docs/control-flow.html i didnt know syntax
+            if(x % i ==0) {
+                divisors.plus(i);
+            }
+        }
+        println(divisors[divisors.size-1])
+        val divisorToPick = getRandomNumber(0,divisors.size-1);
+        return divisors[divisorToPick];
     }
 }
