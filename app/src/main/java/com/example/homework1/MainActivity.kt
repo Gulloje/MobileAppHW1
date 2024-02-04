@@ -27,8 +27,9 @@ class MainActivity : AppCompatActivity() {
 
     fun resetGame(view: View) {
         createEquation();
-        score = 0;
-        questionsAsked = 0;
+        score = 0
+        correctStreak = 0
+        questionsAsked = 0
         findViewById<TextView>(R.id.feedback).text = ""
         findViewById<TextView>(R.id.score).text = "Score: $score/$questionsAsked"
     }
@@ -42,7 +43,8 @@ class MainActivity : AppCompatActivity() {
         //println(R.id.answer.toString().toInt())
         if (view.id == R.id.btnPlus && (op1 + op2 == answer) ||
             view.id == R.id.btnMinus && (op1 - op2 == answer) ||
-            view.id == R.id.btnMult && (op1 * op2 == answer)) {
+            view.id == R.id.btnMult && (op1 * op2 == answer) ||
+            view.id == R.id.btnDivide && (op1 / op2 == answer)) {
             score++;
             correctStreak++
             feedback = "Correct!"
@@ -59,8 +61,8 @@ class MainActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.feedback).text = "$feedback"
         println(feedback)
         if (correctStreak == 3) {
-            Toast.makeText(this, "Sheesh, you kinda smart.", Toast.LENGTH_SHORT).show()
-            correctStreak =0
+            Toast.makeText(this, "Sheeeeesh, you kinda smart.", Toast.LENGTH_SHORT).show()
+            correctStreak = 0
         }
         questionsAsked++;
         findViewById<TextView>(R.id.score).text = "Score: $score/$questionsAsked"
@@ -72,29 +74,33 @@ class MainActivity : AppCompatActivity() {
         var op1 = getRandomNumber(lowerBound + 1, upperBound);
         var op2 = getRandomNumber(lowerBound, op1-1);
 
-        findViewById<TextView>(R.id.operand1).text = "$op1"
-        findViewById<TextView>(R.id.operand2).text = "$op2"
+
+        var answerText = findViewById<TextView>(R.id.answer)
         var operation = getRandomNumber(1,4);
         when(operation) {
             1 -> {
-                findViewById<TextView>(R.id.answer).text = "${op1 + op2}"
+                answerText.text = "${op1 + op2}"
                 feedback = "Wrong: $op1 + $op2 = ${op1+op2}"
             }
             2 -> {
-                findViewById<TextView>(R.id.answer).text = "${op1 - op2}"
+                answerText.text = "${op1 - op2}"
                 feedback = "Wrong: $op1 - $op2 = ${op1-op2}"
             }
             3 -> {
-                findViewById<TextView>(R.id.answer).text = "${op1 * op2}"
+                answerText.text = "${op1 * op2}"
                 feedback = "Wrong: $op1 * $op2 = ${op1*op2}"
             }
             4 -> {
                 op2 = pickDivisor(op1);
-                findViewById<TextView>(R.id.answer).text = "${op1 / op2}"
+                println("op2 = " + op2);
+                answerText.text = "${op1 / op2}"
                 feedback = "Wrong: $op1 / $op2 = ${op1/op2}"
             }
 
         }
+        //set the operand text after in case division was picked
+        findViewById<TextView>(R.id.operand1).text = "$op1"
+        findViewById<TextView>(R.id.operand2).text = "$op2"
 
     }
 
@@ -102,16 +108,17 @@ class MainActivity : AppCompatActivity() {
     private fun getRandomNumber(min: Int, max: Int): Int {
         return Random().nextInt(max-min+1) + min;
     }
-    //need method to get all possible divisors of op1
+    //need method to get all possible divisors of op1, then pick a random one
     private fun pickDivisor(x: Int): Int {
-        val divisors = emptyArray<Int>(); //https://stackoverflow.com/questions/29743160/how-to-create-an-empty-array-in-kotlin
+        var divisors = emptyArray<Int>(); //https://stackoverflow.com/questions/29743160/how-to-create-an-empty-array-in-kotlin
         for(i in 1..x){ //https://kotlinlang.org/docs/control-flow.html i didnt know syntax
-            if(x % i ==0) {
-                divisors.plus(i);
+            if(x % i ==0) { //https://kotlinandroid.org/kotlin/kotlin-add-element-to-array/#:~:text=To%20add%20an%20element%20to,and%20element%20as%20right%20operand.
+                divisors += i;
             }
         }
         println(divisors[divisors.size-1])
         val divisorToPick = getRandomNumber(0,divisors.size-1);
+
         return divisors[divisorToPick];
     }
 }
